@@ -28,6 +28,7 @@ namespace CamposDeUsuario
             new CampoDeUsuario() {Tipo = BoObjectTypes.oItems,Text = "Articulos", Name = "Articulos"},
             new CampoDeUsuario() {Tipo = BoObjectTypes.oItemGroups,Text = "Grupos de Articulos", Name = "GArticulos"},
             new CampoDeUsuario() {Tipo = BoObjectTypes.oUsers,Text = "Usuarios", Name = "Usuarios"},
+            new CampoDeUsuario(){Tipo = BoObjectTypes.oUserTables, Text = "Tablas de usuario", Name = "TablasUsuario"}
             };
             dtImportados = new DataTable();
            // dtImportados.Columns.Clear();
@@ -80,7 +81,7 @@ namespace CamposDeUsuario
             cbVersion.SelectedValue = (int)BoDataServerTypes.dst_MSSQL2017;
             tbUser.Text = "manager";
             tbPass.Text = "sapo12";
-            tbDbName.Text = "SBO_Dicer";
+            cbDbName.Text = "SBO_Dicer";
             tbDbUser.Text = "sa";
             tbDbPass.Text = "Passw0rd";
             tbServer.Text = Environment.MachineName;
@@ -115,7 +116,7 @@ namespace CamposDeUsuario
             c.DbUserName = tbDbUser.Text;
             c.DbPassword = tbDbPass.Text;
             c.DbServerType = (BoDataServerTypes)cbVersion.SelectedValue;
-            c.CompanyDB = tbDbName.Text;
+            c.CompanyDB = cbDbName.Text;
             if (c.Connect() != 0)
             {
                 MessageBox.Show(c.GetLastErrorDescription());
@@ -131,6 +132,7 @@ namespace CamposDeUsuario
             Cursor = Cursors.Default;
         }
 
+       
         public void Actualizar()
         {
             CrearNodosBase();
@@ -143,7 +145,40 @@ namespace CamposDeUsuario
             foreach(CampoDeUsuario c in Campos)
             {
                 var doc = comp.GetBusinessObject(c.Tipo);
-                uf = doc.UserFields;
+                if(c.Tipo == BoObjectTypes.oUserTables)
+                {
+                    //obtener campos de usuario
+                    var dtTablas = executeQuery(@"select TableID,FieldID,AliasID, Descr 
+                    from CUFD where TableID in (select concat('@',TableName) from OUTB)");
+                    var lastTbId = "";
+                    var npadre = tvCampos.Nodes.Find(c.Name, false)[0];
+                    TreeNode nTabla = new TreeNode();
+                    foreach (DataRow row in dtTablas.Rows)
+                    {
+                        if (lastTbId != row["TableID"].ToString())
+                        {
+                            nTabla = new TreeNode();
+                            nTabla.Text = row["TableID"].ToString();
+                            nTabla = npadre.Nodes[npadre.Nodes.Add(nTabla)];
+                            lastTbId = nTabla.Text;
+                        }
+                        nTabla.Nodes.Add(new TreeNode() { 
+                         Tag = $"{row["FieldID"]};{row["TableID"]};{row["AliasID"]}",
+                            Text = $"{row["AliasID"]} -> {row["Descr"]}",
+                            Name = NombresDeNodo.CamposDeUsuario
+                        });
+                            
+                    }
+
+                }
+
+                try
+                {
+                    uf = doc.UserFields;
+                }
+                catch (Exception)
+                { continue; }
+                
                 if (c.Lineas)
                 {
                     TreeNode titulo = tvCampos.Nodes.Find(c.Name, false)[0].Nodes.Find(NombresDeNodo.Titulo, false)[0];
@@ -200,10 +235,20 @@ namespace CamposDeUsuario
         private void button3_Click(object sender, EventArgs e)
         {
             Cursor = Cursors.WaitCursor;
-            Exportar();
+            ExportarCampos();
             Cursor = Cursors.Default;
         }
-        public void Exportar()
+        public string getNodeName(TreeNode n)
+        {
+            string nombre = "";
+            while(n.Parent != null)
+            {
+                nombre = n.Parent.Text +"-"+nombre;
+                n = n.Parent;
+            }
+            return nombre.Replace(' ', '_');
+        }
+        public void ExportarCampos()
         {
             TreeNode[] campos = tvCampos.Nodes.Find(NombresDeNodo.CamposDeUsuario, true);
             if (campos.Length == 0)
@@ -231,7 +276,7 @@ namespace CamposDeUsuario
                 string[] datos = nodo.Tag.ToString().Split(';');
                 
                 uf.GetByKey(datos[1], int.Parse(datos[0]));
-                uf.SaveXML(rutaGuardado + datos[2] + ".xml");
+                uf.SaveXML(rutaGuardado + getNodeName(nodo) + datos[2] + ".xml");
                 exportados++;
             }
             MessageBox.Show($"Se exportaron correctamente {exportados} campos!");
@@ -344,7 +389,7 @@ namespace CamposDeUsuario
         {
             DataTable dt = new DataTable();
             SqlConnectionStringBuilder b = new SqlConnectionStringBuilder();
-            b.InitialCatalog = tbDbName.Text;
+            b.InitialCatalog = cbDbName.Text;
             b.UserID = tbDbUser.Text;
             b.Password = tbDbPass.Text;
             b.DataSource = tbServer.Text;
@@ -531,6 +576,20 @@ namespace CamposDeUsuario
         private void button10_Click(object sender, EventArgs e)
         {
 
+        }
+        private void CargarBds()
+        {
+            Cursor cursor = cbDbName.Cursor;
+            cursor = Cursors.WaitCursor;
+            string q = "select name from sys.databases where database_id > 4";
+            cbDbName.DataSource = executeQuery(q);
+            cbDbName.DisplayMember = "name";
+            cbDbName.ValueMember = "name";
+            cursor = Cursors.Default;
+        }
+        private void cbDbName_DropDown(object sender, EventArgs e)
+        {
+            CargarBds();
         }
     }
 

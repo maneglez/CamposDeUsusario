@@ -43,9 +43,6 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="Tie">
-      <HintPath>..\..\TieDll\TieDLL\bin\Debug\Tie.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="TablaDeUsuario.cs" />
@@ -92,6 +89,12 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\maneglez\TieDll\TieDLL\TieDll.csproj">
+      <Project>{e1c59902-f176-4238-94ea-998f2b0b16f1}</Project>
+      <Name>TieDll</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -31,7 +31,6 @@ namespace CamposDeUsuario
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.button1 = new System.Windows.Forms.Button();
-            this.tbDbName = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.cbVersion = new System.Windows.Forms.ComboBox();
@@ -72,6 +71,7 @@ namespace CamposDeUsuario
             this.colNombreTabla = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colEstatusTabla = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colRutaTabla = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cbDbName = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -84,8 +84,8 @@ namespace CamposDeUsuario
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.cbDbName);
             this.groupBox1.Controls.Add(this.button1);
-            this.groupBox1.Controls.Add(this.tbDbName);
             this.groupBox1.Controls.Add(this.label7);
             this.groupBox1.Controls.Add(this.label6);
             this.groupBox1.Controls.Add(this.cbVersion);
@@ -115,13 +115,6 @@ namespace CamposDeUsuario
             this.button1.Text = "Test Connection";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // tbDbName
-            // 
-            this.tbDbName.Location = new System.Drawing.Point(571, 16);
-            this.tbDbName.Name = "tbDbName";
-            this.tbDbName.Size = new System.Drawing.Size(121, 20);
-            this.tbDbName.TabIndex = 13;
             // 
             // label7
             // 
@@ -506,6 +499,15 @@ namespace CamposDeUsuario
             this.colRutaTabla.Name = "colRutaTabla";
             this.colRutaTabla.ReadOnly = true;
             // 
+            // cbDbName
+            // 
+            this.cbDbName.FormattingEnabled = true;
+            this.cbDbName.Location = new System.Drawing.Point(572, 13);
+            this.cbDbName.Name = "cbDbName";
+            this.cbDbName.Size = new System.Drawing.Size(121, 21);
+            this.cbDbName.TabIndex = 15;
+            this.cbDbName.DropDown += new System.EventHandler(this.cbDbName_DropDown);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -545,7 +547,6 @@ namespace CamposDeUsuario
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox tbUser;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox tbDbName;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.TabControl tabControl1;
@@ -575,6 +576,7 @@ namespace CamposDeUsuario
         private System.Windows.Forms.Button button9;
         private System.Windows.Forms.Button button10;
         private System.Windows.Forms.Button button11;
+        private System.Windows.Forms.ComboBox cbDbName;
     }
 }
 

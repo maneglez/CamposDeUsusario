@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.32510.428
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CamposDeUsuario", "CamposDeUsuario\CamposDeUsuario.csproj", "{1D419B9D-801C-40BE-8961-8686DE8FDF74}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TieDll", "..\TieDll\TieDLL\TieDll.csproj", "{E1C59902-F176-4238-94EA-998F2B0B16F1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TieDll", "..\maneglez\TieDll\TieDLL\TieDll.csproj", "{E1C59902-F176-4238-94EA-998F2B0B16F1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
